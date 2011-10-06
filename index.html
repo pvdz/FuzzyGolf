@@ -1,0 +1,51 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Minifuzzer</title>
+		<style>
+		</style>
+	</head>
+	<body>
+		<button>Go</button><br/>
+		<textarea id="code" style="width: 400px; height: 300px;">
+function f(n) {
+	var s = 0;
+	if (false) alert(x);
+	if (n == 0) (s = -1);
+	if (n == 1) {
+		s += 1;
+	}
+	if (1) 2;
+	else (xxx,xxx);
+	return (s);
+}
+		</textarea>
+		<textarea id="tests" style="width: 400px; height: 300px;">
+[
+	function(func){
+		var result = func(0);
+		return result == -1;
+	},
+	function(func){
+		var result = func(1);
+		return result == 1;
+	},
+	function(func){
+		var result = func(30);
+		return result == 0;
+	},
+	function(func){
+		var result = func('foo');
+		return result == 0;
+	}
+]
+		</textarea>
+		<textarea id="result" style="width: 400px; height: 300px;" WRAP=OFF></textarea>
+		<script src="unicodecategories.js"></script>
+		<script src="Tokenizer.js"></script>
+		<script src="ZeParser.js"></script>
+		<script src="Ast.js"></script>
+		<script src="minifuzz.js"></script>
+	</body>
+</html>

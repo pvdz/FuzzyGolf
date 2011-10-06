@@ -1,0 +1,54 @@
+FuzzyGolf is an automatic js1k/140bytes golfer. Or a proof of concept anyways.
+
+Note: the current set of rules supported is limited to just ``if``, ``if-else`` and `charAt`. This is just a proof of concept, although I'd love to see you add more rules. This system should be able to handle golfing on a generic level with many many rules.
+
+It works by simply trying to apply known minification techniques, even if they are not "solid" (that is, even if they are not fully equivallent). Once such a possibility is found, it is added to a stack. After it swept through the code and finishes its search it will start building new functions by randomly applying the proposed changes. It will determine for each proposal whether it will apply the proposal or not. After that the new function is constructed and tested for syntactic validity. If that's the case, it is transformed to add a dead mans switch, which should prevent any kind of endless looping. This transformation is automatic and 100% equivalent, so we don't have to worry about that.
+
+The user enters the function to golf and some tests. The tests should return true if the result of the newly created function (passed on as arg to the test callback) returns the expected input for your test. If the new function is valid and passes all your tests it is accepted as a valid candidate. The system will repeat these steps for a set amount of times under a repeating timer. After the max times passed, the smallest result (minified for whitespace too) is returned.
+
+Currently there's a very simple gui. Left you enter the function to golf. Don't forget to add a (bogus) function name. This app runs on Zeon which does not take too kindly to "function statement"s. Just add it, it's static so you can just as easily remove two bytes from the result.
+
+An example:
+
+```javascript
+function f(n) {
+	var s = 0;
+	if (false) alert(x);
+	if (n == 0) (s = -1);
+	if (n == 1) {
+		s += 1;
+	}
+	if (1) 2;
+	else (xxx,xxx);
+	return (s);
+}
+```
+
+The middle panel should hold all the tests in an array literal. This value is ran through eval (in case that matters anything). For example (matching the above):
+
+```javascript
+[
+	function(func){
+		var result = func(0);
+		return result == -1;
+	},
+	function(func){
+		var result = func(1);
+		return result == 1;
+	},
+	function(func){
+		var result = func(30);
+		return result == 0;
+	},
+	function(func){
+		var result = func('foo');
+		return result == 0;
+	}
+]
+```
+
+The third panel will hold your output. Functions that have been tested are not tested again. There's a cache of functions that have been tested and the shortest of these is printed after the max attempts have been reached. Either press the button or check the source.
+
+This code runs on ZeParser, see http://github.com/qfox/zeparser .
+
+(c) Peter van der Zee
