@@ -1,3 +1,4 @@
+console.log("commit test");
 // possible changes on input...
 var proposals = null;
 // this is called for any statement during testing. if you create an infinite loop, this will stop it.
